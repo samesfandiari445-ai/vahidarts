@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~/secure_archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        :root {
+            --terminal-green: #00cc33;
+            --terminal-dark: #0a0a0a;
+            --terminal-gray: #1a1a1a;
+            --text-dim: #666666;
+            --error-red: #ff3333;
+            --warning-yellow: #ffcc00;
+        }
+
+        body {
+            background: var(--terminal-dark);
+            color: var(--terminal-green);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 99%, rgba(0, 204, 51, 0.02) 100%),
+                linear-gradient(transparent 99%, rgba(0, 204, 51, 0.02) 100%);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .terminal-header {
+            background: var(--terminal-gray);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--terminal-green);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .prompt {
+            color: var(--terminal-green);
+            margin-bottom: 1rem;
+        }
+
+        .command {
+            color: var(--text-dim);
+        }
+
+        .file-system {
+            margin: 2rem 0;
+            border: 1px solid var(--text-dim);
+            padding: 1rem;
+            background: rgba(0, 204, 51, 0.02);
+        }
+
+        .folder {
+            color: var(--terminal-green);
+            margin: 1rem 0;
+            padding: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .folder:hover {
+            background: rgba(0, 204, 51, 0.1);
+            border: 1px solid var(--terminal-green);
+        }
+
+        .folder i {
+            margin-left: 0.5rem;
+        }
+
+        .file-item {
+            color: var(--text-dim);
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background: rgba(0, 204, 51, 0.05);
+            color: var(--terminal-green);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .file-action {
+            background: none;
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+            padding: 0.2rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .file-action:hover {
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .file-preview {
+            border: 1px solid var(--text-dim);
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            max-height: 500px;
+            overflow: auto;
+            display: none;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border: 1px solid var(--text-dim);
+        }
+
+        .file-info {
+            color: var(--text-dim);
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .home-btn {
+            color: var(--terminal-green);
+            cursor: pointer;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            border: 1px solid var(--text-dim);
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            border-color: var(--terminal-green);
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--terminal-gray);
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-icon {
+            margin-right: 0.5rem;
+        }
+
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-box {
+            background: var(--terminal-gray);
+            border: 2px solid var(--terminal-green);
+            padding: 2rem;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--text-dim);
+            color: var(--terminal-green);
+            padding: 0.5rem;
+            width: 100%;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .login-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--terminal-green);
+        }
+
+        .login-btn {
+            background: var(--terminal-green);
+            color: var(--terminal-dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background: #00aa2a;
+        }
+
+        .login-btn:disabled {
+            background: var(--text-dim);
+            cursor: not-allowed;
+        }
+
+        .login-error {
+            color: var(--error-red);
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            display: none;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .login-warning {
+            color: var(--warning-yellow);
+        }
+
+        .security-info {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            margin-top: 1rem;
+            border-top: 1px solid var(--text-dim);
+            padding-top: 0.5rem;
+        }
+
+        .attempts-counter {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        .lock-info {
+            color: var(--warning-yellow);
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .storage-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .storage-bar {
+            width: 100px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: var(--terminal-green);
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .status-bar {
+                flex-direction: column;
+                gap: 5px;
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+            
+            .storage-info {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <!-- Login Modal -->
+    <div class="login-modal active" id="loginModal">
+        <div class="login-box">
+            <h3 style="color: var(--terminal-green); margin-bottom: 1rem;">SECURE ARCHIVE ACCESS</h3>
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1rem;">
+                Enter decryption key:
+            </p>
+            <input type="password" class="login-input" id="passwordInput" placeholder="•••••••••••••••••">
+            <button class="login-btn" id="loginButton" onclick="checkPassword()">DECRYPT & ACCESS</button>
+            
+            <div class="login-error" id="loginError">
+                <!-- Error messages will appear here -->
+            </div>
+            
+            <div class="attempts-counter" id="attemptsCounter">
+                Failed attempts: <span id="attemptsCount">0</span>/5
+            </div>
+            
+            <div class="lock-info" id="lockInfo">
+                <!-- Lock info will appear here -->
+            </div>
+            
+            <div class="security-info">
+                System: encrypted_archive_v2.1<br>
+                Security: AES-256 | Auto-lock: 5 attempts<br>
+                Status: <span id="securityStatus">READY</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="terminal-header" style="display: none;" id="terminalHeader">
+        user@secure_archive: ~/ - TERMINAL v2.1
+    </div>
+
+    <div class="main-container" style="display: none;" id="mainContent">
+        <!-- Terminal input -->
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> whoami
+        </div>
+        <div class="output">
+            > secure_archive | encrypted_storage | private_vault
+        </div>
+
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> ls -la
+        </div>
+
+        <!-- File system -->
+        <div class="file-system">
+            <!-- Folder 1 -->
+            <div class="folder" onclick="navigateTo('codes')">
+                <i class="fas fa-folder"></i>
+                /codes
+            </div>
+
+            <!-- Folder 2 -->
+            <div class="folder" onclick="navigateTo('images')">
+                <i class="fas fa-folder"></i>
+                /images
+            </div>
+
+            <!-- Folder 3 -->
+            <div class="folder" onclick="navigateTo('documents')">
+                <i class="fas fa-folder"></i>
+                /documents
+            </div>
+        </div>
+
+        <!-- System status -->
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> system_status
+        </div>
+        <div class="output">
+            > Mode: ENCRYPTED<br>
+            > Storage: <span id="storageStatus">Calculating...</span><br>
+            > Files: <span id="fileCount">0</span> items<br>
+            > Security: AES-256 ACTIVE
+        </div>
+    </div>
+
+    <div class="status-bar" style="display: none;" id="statusBar">
+        <div class="status-left">
+            STATUS: SECURE | USER: [ROOT] | LOCATION: ~/
+        </div>
+        <div class="storage-info">
+            <span>STORAGE:</span>
+            <div class="storage-bar">
+                <div class="storage-fill" id="storageFill"></div>
+            </div>
+            <span id="storageText">0/5 GB</span>
+        </div>
+    </div>
+
+    <script>
+        // سیستم امنیتی با ذخیره‌سازی در localStorage
+        let securityState = {
+            failedAttempts: 0,
+            isLocked: false,
+            unlockTime: 0,
+            extraSeconds: 0,
+            lastLockDuration: 0
+        };
+        
+        let lockTimer = null;
+
+        // File database with file sizes in KB
+        const fileDatabase = {
+            'codes': [
+                {
+                    name: 'site_backups.rar',
+                    path: 'files/codes/Site/backup.rar',
+                    type: 'rar',
+                    sizeKB: 143,
+                    description: 'All sites I made'
+                }
+            ],
+            'images': [
+                {
+                    name: 'wallpaper',
+                    path: 'files/images/bestwallpaperever.jpg',
+                    type: 'jpg',
+                    sizeKB: 111,
+                    description: 'best wallpaper ever i have '
+                }
+            ],
+            'documents': [
+                {
+                    name: '',
+                    path: '',
+                    type: 'pdf',
+                    sizeKB: 0,
+                    description: ''
+                }
+            ]
+        };
+
+        // ذخیره وضعیت در localStorage
+        function saveSecurityState() {
+            localStorage.setItem('securityState', JSON.stringify(securityState));
+        }
+
+        // بارگذاری وضعیت از localStorage
+        function loadSecurityState() {
+            const saved = localStorage.getItem('securityState');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    securityState = parsed;
+                    
+                    // اگر قفل فعال است، زمان باقی‌مانده را بررسی کن
+                    if (securityState.isLocked) {
+                        const now = Date.now();
+                        if (now >= securityState.unlockTime) {
+                            // زمان قفل تمام شده، وارد حالت "یک فرصت" شو
+                            securityState.isLocked = false;
+                            saveSecurityState();
+                        }
+                    }
+                    
+                    return true;
+                } catch (e) {
+                    console.error('Error loading security state:', e);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        // بررسی وضعیت قفل
+        function checkLockStatus() {
+            if (!securityState.isLocked) {
+                return { locked: false, remaining: 0 };
+            }
+            
+            const now = Date.now();
+            if (now >= securityState.unlockTime) {
+                // زمان قفل تمام شده، وارد حالت "یک فرصت"
+                securityState.isLocked = false;
+                saveSecurityState();
+                return { locked: false, remaining: 0 };
+            }
+            
+            const remaining = Math.ceil((securityState.unlockTime - now) / 1000);
+            return { locked: true, remaining };
+        }
+
+        // فعال‌سازی قفل
+        function activateLock() {
+            // محاسبه زمان قفل
+            let lockSeconds = 30; // 30 ثانیه پایه
+            
+            // اگر بیش از 5 بار اشتباه شده، برای هر بار اضافی 60 ثانیه اضافه کن
+            if (securityState.failedAttempts > 5) {
+                securityState.extraSeconds = (securityState.failedAttempts - 5) * 60;
+                lockSeconds += securityState.extraSeconds;
+            }
+            
+            securityState.isLocked = true;
+            securityState.unlockTime = Date.now() + (lockSeconds * 1000);
+            securityState.lastLockDuration = lockSeconds;
+            
+            saveSecurityState();
+            
+            console.log(`🔒 SYSTEM LOCKED`);
+            console.log(`- Failed attempts: ${securityState.failedAttempts}`);
+            console.log(`- Base lock: 30 seconds`);
+            console.log(`- Extra seconds: ${securityState.extraSeconds}s`);
+            console.log(`- Total lock: ${lockSeconds} seconds`);
+            console.log(`- Unlock at: ${new Date(securityState.unlockTime).toLocaleTimeString()}`);
+            console.log(`- Saved to localStorage`);
+            
+            updateLockDisplay();
+        }
+
+        // به‌روزرسانی نمایش وضعیت قفل
+        function updateLockDisplay() {
+            const lockStatus = checkLockStatus();
+            const errorDiv = document.getElementById('loginError');
+            const passwordInput = document.getElementById('passwordInput');
+            const loginBtn = document.getElementById('loginButton');
+            const securityStatus = document.getElementById('securityStatus');
+            const lockInfo = document.getElementById('lockInfo');
+            
+            if (lockStatus.locked) {
+                // هنوز قفل فعال است
+                errorDiv.innerHTML = `
+                    <span class="login-warning">⚠️ SYSTEM LOCKED</span><br>
+                    Too many failed attempts!<br>
+                    System locked for <strong>${30 + securityState.extraSeconds} seconds</strong><br>
+                    Remaining: <strong>${lockStatus.remaining}s</strong>
+                    ${securityState.extraSeconds > 0 ? `<br><span style="font-size:0.7rem">(30s base + ${securityState.extraSeconds}s for extra attempts)</span>` : ''}
+                `;
+                errorDiv.style.display = 'block';
+                lockInfo.style.display = 'block';
+                lockInfo.innerHTML = `Extra lock time: +${securityState.extraSeconds}s`;
+                
+                passwordInput.disabled = true;
+                loginBtn.disabled = true;
+                loginBtn.textContent = `LOCKED (${lockStatus.remaining}s)`;
+                loginBtn.style.background = '#ff3333';
+                securityStatus.textContent = `LOCKED (${lockStatus.remaining}s)`;
+                securityStatus.style.color = '#ff3333';
+                
+                // به‌روزرسانی هر ثانیه
+                clearTimeout(lockTimer);
+                lockTimer = setTimeout(updateLockDisplay, 1000);
+            } else if (securityState.failedAttempts >= 5) {
+                // قفل تمام شده، اما سیستم هنوز در حالت قفل است (یک فرصت)
+                errorDiv.innerHTML = `
+                    <span class="login-warning">⚠️ LOCK RELEASED - ONE ATTEMPT</span><br>
+                    System lock has been released.<br>
+                    You have <strong>ONE attempt</strong> before system locks again.<br>
+                    Next lock will be <strong>${30 + securityState.extraSeconds + 60} seconds</strong>.
+                `;
+                errorDiv.style.display = 'block';
+                lockInfo.style.display = 'block';
+                lockInfo.innerHTML = `Next lock: ${30 + securityState.extraSeconds + 60}s`;
+                
+                passwordInput.disabled = false;
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'ONE ATTEMPT REMAINING';
+                loginBtn.style.background = '#ffcc00';
+                securityStatus.textContent = 'ONE ATTEMPT';
+                securityStatus.style.color = '#ffcc00';
+                
+                clearTimeout(lockTimer);
+            } else {
+                // سیستم کاملاً آزاد است
+                passwordInput.disabled = false;
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'DECRYPT & ACCESS';
+                loginBtn.style.background = 'var(--terminal-green)';
+                errorDiv.style.display = 'none';
+                lockInfo.style.display = 'none';
+                securityStatus.textContent = 'READY';
+                securityStatus.style.color = 'var(--terminal-green)';
+                clearTimeout(lockTimer);
+            }
+        }
+
+        // به‌روزرسانی نمایش تعداد تلاش‌ها
+        function updateAttemptsDisplay() {
+            const attemptsCount = document.getElementById('attemptsCount');
+            const attemptsCounter = document.getElementById('attemptsCounter');
+            
+            attemptsCount.textContent = securityState.failedAttempts;
+            
+            if (securityState.failedAttempts >= 3) {
+                attemptsCounter.style.color = '#ffcc00';
+            } else {
+                attemptsCounter.style.color = 'var(--text-dim)';
+            }
+        }
+
+        // تابع checkPassword
+        function checkPassword() {
+            const lockStatus = checkLockStatus();
+            
+            // اگر سیستم در حالت "یک فرصت" باشد
+            if (securityState.failedAttempts >= 5 && !lockStatus.locked) {
+                // کاربر در حالت یک فرصت است
+                const password = document.getElementById('passwordInput').value;
+                const correctPassword = 'S@mjangi1218es';
+                
+                if (password === correctPassword) {
+                    // رمز درست بود - ریست همه چیز
+                    securityState.failedAttempts = 0;
+                    securityState.isLocked = false;
+                    securityState.extraSeconds = 0;
+                    securityState.lastLockDuration = 0;
+                    saveSecurityState();
+                    updateAttemptsDisplay();
+                    
+                    console.log('✅ Password correct in ONE ATTEMPT mode');
+                    console.log('✅ Security state reset');
+                    grantAccess();
+                } else {
+                    // رمز اشتباه بود - قفل مجدد با زمان بیشتر
+                    securityState.failedAttempts++;
+                    securityState.extraSeconds += 60;
+                    saveSecurityState();
+                    activateLock(); // قفل مجدد با زمان جدید
+                }
+                return;
+            }
+            
+            // اگر سیستم قفل شده باشد
+            if (lockStatus.locked) {
+                updateLockDisplay();
+                return;
+            }
+            
+            // حالت عادی
+            const password = document.getElementById('passwordInput').value;
+            const correctPassword = 'S@mjangi1218es';
+            const errorDiv = document.getElementById('loginError');
+            
+            if (password === correctPassword) {
+                // رمز درست بود
+                securityState.failedAttempts = 0;
+                securityState.isLocked = false;
+                securityState.extraSeconds = 0;
+                securityState.lastLockDuration = 0;
+                saveSecurityState();
+                updateAttemptsDisplay();
+                
+                console.log('✅ Password correct - Access granted');
+                console.log('✅ Security state reset');
+                grantAccess();
+            } else {
+                // رمز اشتباه بود
+                securityState.failedAttempts++;
+                saveSecurityState();
+                updateAttemptsDisplay();
+                
+                const attemptsLeft = 5 - securityState.failedAttempts;
+                
+                if (securityState.failedAttempts >= 5) {
+                    console.log(`❌ Attempt #${securityState.failedAttempts} - Activating lock`);
+                    activateLock();
+                } else if (securityState.failedAttempts >= 3) {
+                    errorDiv.innerHTML = `⚠️ Invalid key! <strong>${attemptsLeft}</strong> attempts remaining.<br>After 5 attempts: 30s lock + 60s for each extra attempt.`;
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.innerHTML = '❌ Invalid decryption key. Access denied.';
+                    errorDiv.style.display = 'block';
+                }
+                
+                // پاک کردن فیلد پسورد
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // دسترسی دادن به کاربر
+        function grantAccess() {
+            // Hide login modal
+            document.getElementById('loginModal').classList.remove('active');
+            
+            // Show main content
+            document.getElementById('terminalHeader').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('statusBar').style.display = 'flex';
+            
+            // Update storage display
+            updateStorageDisplay();
+        }
+
+        // Calculate total storage used
+        function calculateStorage() {
+            let totalKB = 0;
+            let fileCount = 0;
+            
+            Object.values(fileDatabase).forEach(folder => {
+                folder.forEach(file => {
+                    totalKB += file.sizeKB;
+                    fileCount++;
+                });
+            });
+            
+            return { totalKB, fileCount };
+        }
+
+        // Format KB to human readable
+        function formatStorage(kb) {
+            if (kb < 1024) {
+                return kb.toFixed(1) + ' KB';
+            } else if (kb < 1024 * 1024) {
+                return (kb / 1024).toFixed(1) + ' MB';
+            } else {
+                return (kb / (1024 * 1024)).toFixed(1) + ' GB';
+            }
+        }
+
+        // Update storage display
+        function updateStorageDisplay() {
+            const { totalKB, fileCount } = calculateStorage();
+            const totalGB = 5 * 1024 * 1024;
+            const usedPercent = (totalKB / totalGB) * 100;
+            
+            document.getElementById('storageStatus').textContent = 
+                `${formatStorage(totalKB)} / 5 GB (${usedPercent.toFixed(1)}%)`;
+            document.getElementById('fileCount').textContent = fileCount;
+            
+            const storageFill = document.getElementById('storageFill');
+            const storageText = document.getElementById('storageText');
+            
+            storageFill.style.width = `${usedPercent}%`;
+            storageText.textContent = `${formatStorage(totalKB)} / 5 GB`;
+        }
+
+        // Allow Enter key to submit password
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Icons for different file types
+        function getFileIcon(fileType) {
+            const icons = {
+                'zip': 'fa-file-archive',
+                'rar': 'fa-file-archive',
+                'js': 'fa-file-code',
+                'html': 'fa-file-code',
+                'css': 'fa-file-code',
+                'png': 'fa-file-image',
+                'jpg': 'fa-file-image',
+                'jpeg': 'fa-file-image',
+                'gif': 'fa-file-image',
+                'pdf': 'fa-file-pdf',
+                'txt': 'fa-file-alt',
+                'doc': 'fa-file-word',
+                'docx': 'fa-file-word'
+            };
+            return icons[fileType.toLowerCase()] || 'fa-file';
+        }
+
+        function navigateTo(folderName) {
+            const files = fileDatabase[folderName] || [];
+            const { totalKB } = calculateStorage();
+            const totalGB = 5 * 1024 * 1024;
+            const usedPercent = (totalKB / totalGB) * 100;
+            
+            const pageContent = `<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>~/secure_archive/${folderName}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Courier New',monospace;}:root{--terminal-green:#00cc33;--terminal-dark:#0a0a0a;--terminal-gray:#1a1a1a;--text-dim:#666666;}body{background:var(--terminal-dark);color:var(--terminal-green);line-height:1.4;min-height:100vh;}.matrix-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent 99%,rgba(0,204,51,0.02)100%),linear-gradient(transparent 99%,rgba(0,204,51,0.02)100%);background-size:30px 30px;pointer-events:none;z-index:-1;opacity:0.1;}.terminal-header{background:var(--terminal-gray);padding:0.5rem 1rem;border-bottom:1px solid var(--terminal-green);font-size:0.8rem;opacity:0.7;}.main-container{max-width:1000px;margin:0 auto;padding:2rem;}.prompt{color:var(--terminal-green);margin-bottom:1rem;}.command{color:var(--text-dim);}.file-system{margin:2rem 0;border:1px solid var(--text-dim);padding:1rem;background:rgba(0,204,51,0.02);}.file-item{color:var(--text-dim);margin:0.5rem 0;padding:0.5rem;border:1px solid transparent;transition:all 0.3s;display:flex;justify-content:space-between;align-items:center;}.file-item:hover{background:rgba(0,204,51,0.05);color:var(--terminal-green);}.file-actions{display:flex;gap:1rem;}.file-action{background:none;border:1px solid var(--text-dim);color:var(--text-dim);padding:0.2rem 0.5rem;cursor:pointer;font-size:0.8rem;transition:all 0.3s;}.file-action:hover{border-color:var(--terminal-green);color:var(--terminal-green);}.file-preview{border:1px solid var(--text-dim);margin:1rem 0;padding:1rem;background:rgba(0,0,0,0.5);max-height:500px;overflow:auto;display:none;text-align:center;}.preview-image{max-width:100%;max-height:400px;border:1px solid var(--text-dim);}.file-info{color:var(--text-dim);margin-top:1rem;font-size:0.8rem;}.home-btn{color:var(--terminal-green);cursor:pointer;margin-bottom:2rem;padding:0.5rem;border:1px solid var(--text-dim);display:inline-block;text-decoration:none;}.home-btn:hover{border-color:var(--terminal-green);}.status-bar{position:fixed;bottom:0;left:0;width:100%;background:var(--terminal-gray);padding:0.3rem 1rem;font-size:0.8rem;color:var(--text-dim);border-top:1px solid var(--text-dim);display:flex;justify-content:space-between;align-items:center;}.file-icon{margin-right:0.5rem;}.storage-info{display:flex;align-items:center;gap:10px;}.storage-bar{width:100px;height:6px;background:#333;border-radius:3px;overflow:hidden;}.storage-fill{height:100%;background:var(--terminal-green);width:${usedPercent}%;}</style></head><body><div class="matrix-bg"></div><div class="terminal-header">user@secure_archive:~/${folderName}-TERMINAL v2.1</div><div class="main-container"><a href="index.html" class="home-btn"><i class="fas fa-home"></i>Home</a><div class="prompt"><span class="command">user@archive:~/${folderName}$</span>ls -la</div><div class="file-system">${files.map(file=>{const sizeFormatted=formatStorage(file.sizeKB);return`<div class="file-item"><span><i class="fas ${getFileIcon(file.type)} file-icon"></i>${file.name}<span style="color:var(--text-dim);font-size:0.7rem;margin-left:0.5rem;">(${sizeFormatted})</span></span><div class="file-actions"><button class="file-action" onclick="showFilePreview('${file.path}','${file.type}','${file.name}',${file.sizeKB})">View</button><button class="file-action" onclick="downloadFile('${file.path}','${file.name}')">Download</button></div></div><div style="color:var(--text-dim);font-size:0.7rem;padding-left:2rem;">${file.description}|Size:${sizeFormatted}</div>`}).join('')}${files.length===0?`<div style="color:var(--text-dim);text-align:center;padding:2rem;">Empty folder<br>Add your files to the fileDatabase variable</div>`:''}</div><div id="file-preview" class="file-preview"><div id="preview-content"></div><div class="file-info" id="file-info"></div></div></div><div class="status-bar"><div class="status-left">STATUS:SECURE|LOCATION:~/${folderName}|USER:[ROOT]</div><div class="storage-info"><span>STORAGE:</span><div class="storage-bar"><div class="storage-fill"></div></div><span>${formatStorage(totalKB)}/5 GB</span></div></div><script>const fileDatabase=${JSON.stringify(fileDatabase)};function formatStorage(kb){if(kb<1024){return kb.toFixed(1)+' KB';}else if(kb<1024*1024){return(kb/1024).toFixed(1)+' MB';}else{return(kb/(1024*1024)).toFixed(1)+' GB';}}function getFileIcon(fileType){const icons={'zip':'fa-file-archive','rar':'fa-file-archive','js':'fa-file-code','html':'fa-file-code','css':'fa-file-code','png':'fa-file-image','jpg':'fa-file-image','jpeg':'fa-file-image','gif':'fa-file-image','pdf':'fa-file-pdf','txt':'fa-file-alt','doc':'fa-file-word','docx':'fa-file-word'};return icons[fileType.toLowerCase()]||'fa-file';}function showFilePreview(filePath,fileType,fileName,fileSizeKB){const preview=document.getElementById('file-preview');const content=document.getElementById('preview-content');const info=document.getElementById('file-info');preview.style.display='block';info.textContent=\`\${fileName}|Type:\${fileType}|Size:\${formatStorage(fileSizeKB)}\`;const typeLower=fileType.toLowerCase();if(['png','jpg','jpeg','gif'].includes(typeLower)){content.innerHTML=\`<img src="\${filePath}"class="preview-image"alt="\${fileName}">\`;}else if(typeLower==='pdf'){content.innerHTML=\`<i class="fas fa-file-pdf"style="font-size:4rem;color:var(--text-dim);margin:2rem;"></i><div>PDF file-download to view</div>\`;}else if(['zip','rar'].includes(typeLower)){content.innerHTML=\`<i class="fas fa-file-archive"style="font-size:4rem;color:var(--text-dim);margin:2rem;"></i><div>Compressed file-download to extract</div>\`;}else{content.innerHTML=\`<i class="fas fa-file"style="font-size:4rem;color:var(--text-dim);margin:2rem;"></i><div>\${fileType}file-download to view</div>\`;}}function downloadFile(filePath,fileName){const a=document.createElement('a');a.href=filePath;a.download=fileName;document.body.appendChild(a);a.click();document.body.removeChild(a);}<\/script></body></html>`;
+
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.document.write(pageContent);
+                newWindow.document.close();
+            }
+        }
+
+        // بررسی وضعیت هنگام لود صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            // بارگذاری وضعیت ذخیره شده
+            const loaded = loadSecurityState();
+            
+            if (loaded) {
+                console.log('🔒 Loaded security state from localStorage:');
+                console.log('- Failed attempts:', securityState.failedAttempts);
+                console.log('- Is locked:', securityState.isLocked);
+                console.log('- Extra seconds:', securityState.extraSeconds);
+                console.log('- Last lock duration:', securityState.lastLockDuration);
+                if (securityState.unlockTime) {
+                    console.log('- Unlock time:', new Date(securityState.unlockTime).toLocaleTimeString());
+                    const remaining = Math.ceil((securityState.unlockTime - Date.now()) / 1000);
+                    console.log('- Remaining seconds:', remaining > 0 ? remaining : 0);
+                }
+            }
+            
+            updateAttemptsDisplay();
+            updateLockDisplay();
+            document.getElementById('passwordInput').focus();
+        });
+
+        // Auto-focus on password input
+        const modal = document.getElementById('loginModal');
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    if (modal.classList.contains('active')) {
+                        setTimeout(() => {
+                            document.getElementById('passwordInput').focus();
+                        }, 100);
+                    }
+                }
+            });
+        });
+        observer.observe(modal, { attributes: true });
+    </script>
+</body>
+</html>
