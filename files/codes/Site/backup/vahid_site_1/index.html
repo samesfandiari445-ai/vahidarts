@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VAHID ESFANDIARI | DARK REALISM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #0a0a0a;
+            --accent-color: #8b0000;
+            --text-color: #d4af37;
+            --text-muted: #8a8a8a;
+            --gold: #d4af37;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            --transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .main-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .artist-name {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            letter-spacing: clamp(4px, 2vw, 8px);
+            text-transform: uppercase;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1.2;
+        }
+
+        .artist-title {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            letter-spacing: clamp(2px, 1vw, 3px);
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* Hero Section */
+        .museum-hero {
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0 5%;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            width: 100%;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            letter-spacing: clamp(8px, 3vw, 15px);
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            animation: titleGlow 4s ease-in-out infinite alternate;
+            line-height: 1.1;
+            word-wrap: break-word;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
+            to { text-shadow: 0 0 60px rgba(212, 175, 55, 0.6), 0 0 100px rgba(212, 175, 55, 0.3); }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            letter-spacing: clamp(4px, 2vw, 8px);
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+            letter-spacing: clamp(1px, 1vw, 2px);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-8px); }
+            60% { transform: translateX(-50%) translateY(-4px); }
+        }
+
+        /* SIMPLE GALLERY - NO COMPLEX LAYERS */
+        .museum-gallery {
+            padding: clamp(4rem, 10vw, 8rem) 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        .gallery-item {
+            margin-bottom: clamp(4rem, 10vw, 10rem);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .artwork-card {
+            position: relative;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: clamp(50vh, 60vw, 70vh);
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        .artwork-card:hover .artwork-image {
+            transform: scale(1.03);
+            filter: grayscale(0%) contrast(120%);
+        }
+
+        .artwork-caption {
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .artwork-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            letter-spacing: clamp(2px, 1vw, 4px);
+            margin-bottom: 0.8rem;
+            color: var(--gold);
+            line-height: 1.2;
+        }
+
+        .artwork-meta {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .artwork-description {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        /* About Section */
+        .museum-about {
+            padding: clamp(4rem, 10vw, 8rem) 0;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(1rem, 4vw, 2rem);
+        }
+
+        .about-title {
+            font-size: clamp(2rem, 6vw, 3rem);
+            letter-spacing: clamp(4px, 2vw, 8px);
+            margin-bottom: 2rem;
+            color: var(--gold);
+            line-height: 1.2;
+        }
+
+        .about-text {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .signature {
+            font-family: cursive;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--gold);
+            margin-top: 2rem;
+        }
+
+        /* Contact Section */
+        .museum-contact {
+            padding: clamp(3rem, 8vw, 5rem) 0;
+            text-align: center;
+        }
+
+        .contact-text {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            letter-spacing: clamp(2px, 1vw, 3px);
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .email-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            transition: var(--transition);
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        .email-link:hover,
+        .email-link:focus {
+            border-bottom: 1px solid var(--gold);
+            outline: none;
+        }
+
+        /* Footer */
+        .museum-footer {
+            padding: clamp(2rem, 5vw, 3rem) 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+        }
+
+        .copyright {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* SIMPLE MODAL - NO COMPLEXITY */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 2000;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            max-width: 95%;
+            max-height: 90vh;
+            object-fit: contain;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 100px rgba(212, 175, 55, 0.2);
+            animation: zoomIn 0.3s ease;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--gold);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .modal {
+                padding: 10px;
+            }
+            
+            .close-btn {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="artist-info">
+                <div class="artist-name">VAHID ESFANDIARI</div>
+                <div class="artist-title">DARK REALISM ARTIST</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="museum-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Dark Realism</h1>
+            <p class="hero-subtitle">A Digital Museum of Shadows</p>
+        </div>
+        <div class="scroll-indicator">SCROLL TO ENTER</div>
+    </section>
+
+    <!-- SIMPLE GALLERY - WORKS PERFECTLY -->
+    <section class="museum-gallery">
+        <!-- Artwork 1 -->
+        <div class="gallery-item">
+            <div class="artwork-card" onclick="openModal('ART/ART work 1.jpg')">
+                <img src="ART/ART work 1.jpg" 
+                     alt="Echoes of Silence" 
+                     class="artwork-image">
+                <div class="artwork-caption">
+                    <h2 class="artwork-title">OIL ON CANVAS</h2>
+                    <div class="artwork-meta">2018 • 30×25 CM</div>
+                    <p class="artwork-description">
+                        <!-- A profound exploration of internal solitude amidst external chaos. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artwork 2 -->
+        <div class="gallery-item">
+            <div class="artwork-card" onclick="openModal('ART/ART work 2.jpg')">
+                <img src="ART/ART work 2.jpg" 
+                     alt="Shadows of Thought" 
+                     class="artwork-image">
+                <div class="artwork-caption">
+                    <h2 class="artwork-title">OIL PAINT</h2>
+                    <div class="artwork-meta">• 2023 • 35×27 CM</div>
+                    <p class="artwork-description">
+                        <!-- The delicate balance between consciousness and oblivion. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artwork 3 -->
+        <div class="gallery-item">
+            <div class="artwork-card" onclick="openModal('ART/ART work 3.jpg')">
+                <img src="ART/ART work 3.jpg" 
+                     alt="Requiem for a Dream" 
+                     class="artwork-image">
+                <div class="artwork-caption">
+                    <h2 class="artwork-title">OIL TOLSTOI</h2>
+                    <div class="artwork-meta">• 2023 • 33×26 CM</div>
+                    <p class="artwork-description">
+                        <!-- A symphony of decay and rebirth through mixed media. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="museum-about">
+        <div class="about-content">
+            <h2 class="about-title">VAHID ESFANDIARI</h2>
+            <p class="about-text">
+                In the silent spaces between light and shadow, my work finds its voice. Each piece is an excavation of the human condition, a visual archaeology of emotions too profound for words.
+            </p>
+            <div class="about-title">THE ARTIST</div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="museum-contact">
+        <p class="contact-text">FOR INQUIRIES AND COMMISSIONS</p>
+        <a href="ve001361@gmail.com" class="email-link">ve001361@gmail.com</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="museum-footer">
+        <div class="copyright">
+            &copy; 2025 VAHID ESFANDIARI ARTS. ALL RIGHTS RESERVED.
+        </div>
+        <div><a class="copyright">DISINED BY SAM ESFANDIARI</a></div>
+    </footer>
+
+    <!-- SIMPLE MODAL - JUST WORKS -->
+    <div id="modal" class="modal">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <img id="modal-image" class="modal-content" src="" alt="">
+    </div>
+
+    <script>
+        // SIMPLE JAVASCRIPT - NO COMPLEXITY
+        function openModal(imageSrc) {
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modal-image');
+            
+            modalImage.src = imageSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside image
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Simple scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        console.log('✅ Website loaded successfully! Click on any artwork to view it.');
+    </script>
+</body>
+</html>

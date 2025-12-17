@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arses Gallery | تیزر و تولید محتوای حرفه‌ای</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation"></div>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <img src="image/logo1.jpg" alt="Logo" class="logo-small">
+            
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span class="lang fa">خانه</span>
+                    <span class="lang en" style="display: none;">Home</span>
+                </a></li>
+                <li><a href="#tizer" class="nav-link" data-page="tizer">
+                    <i class="fas fa-play-circle"></i>
+                    <span class="lang fa">تیزر</span>
+                    <span class="lang en" style="display: none;">Teasers</span>
+                </a></li>
+                <li><a href="#instagram" class="nav-link" data-page="instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span class="lang fa">اینستاگرام</span>
+                    <span class="lang en" style="display: none;">Instagram</span>
+                </a></li>
+                <li><a href="#contact" class="nav-link" data-page="contact">
+                    <i class="fas fa-phone"></i>
+                    <span class="lang fa">تماس</span>
+                    <span class="lang en" style="display: none;">Contact</span>
+                </a></li>
+            </ul>
+
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Language Switch -->
+    <div class="language-switch">
+        <button onclick="setLanguage('fa')" class="lang-btn active">فارسی</button>
+        <button onclick="setLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Home Page -->
+    <section id="home" class="page active">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="logo-box">
+                    <img src="image/logo1.jpg" alt="لوگوی سایت" class="logo">
+                </div>
+
+                <h1 class="lang fa">ارسس درخشان</h1>
+                <h1 class="lang en" style="display: none;">Arses Derakhshan</h1>
+
+                <p class="lang fa">طراح تیزر و تولیدکننده محتوای حرفه‌ای با سال‌ها تجربه در زمینه تولید محتوای بصری</p>
+                <p class="lang en" style="display: none;">Professional teaser designer & content creator with years of experience in visual content production</p>
+
+                <div class="hero-buttons">
+                    <a href="#tizer" class="btn" data-page="tizer">
+                        <i class="fas fa-play-circle"></i>
+                        <span class="lang fa">مشاهده تیزرها</span>
+                        <span class="lang en" style="display: none;">View Teasers</span>
+                    </a>
+                    
+                    <a href="#instagram" class="btn btn-outline" data-page="instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span class="lang fa">مشاهده اینستاگرام</span>
+                        <span class="lang en" style="display: none;">View Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teaser Page -->
+    <section id="tizer" class="page">
+        <div class="section-header">
+            <h2 class="lang fa">تیزرهای حرفه‌ای</h2>
+            <h2 class="lang en" style="display: none;">Professional Teasers</h2>
+            <p class="lang fa">مجموعه‌ای از بهترین تیزرهای تولید شده با بالاترین کیفیت</p>
+            <p class="lang en" style="display: none;">A collection of the best produced teasers with highest quality</p>
+        </div>
+
+        <div class="card-container">
+            <!-- Teaser 1 -->
+            <div class="card fade-in">
+                <div class="video-container">
+                    <div class="video-loading"></div>
+                    <video controls preload="metadata" 
+                           onloadstart="this.previousElementSibling.style.display='block'"
+                           oncanplay="this.previousElementSibling.style.display='none'">
+                        <source src="tizer/1.mp4" type="video/mp4">
+                        مرورگر شما از این ویدئو پشتیبانی نمیکند
+                    </video>
+                </div>
+                <div class="card-info">
+                    <h3 class="lang fa">تیزر نمونه ۱</h3>
+                    <h3 class="lang en" style="display: none;">Teaser Sample 1</h3>
+                    <p class="lang fa">تیزر تبلیغاتی با جلوه‌های ویژه</p>
+                    <p class="lang en" style="display: none;">Advertising teaser with special effects</p>
+                </div>
+            </div>
+
+            <!-- Teaser 2 -->
+            <div class="card fade-in">
+                <div class="video-container">
+                    <div class="video-loading"></div>
+                    <video controls preload="metadata"
+                           onloadstart="this.previousElementSibling.style.display='block'"
+                           oncanplay="this.previousElementSibling.style.display='none'">
+                        <source src="tizer/2.mp4" type="video/mp4">
+                        مرورگر شما از این ویدئو پشتیبانی نمیکند
+                    </video>
+                </div>
+                <div class="card-info">
+                    <h3 class="lang fa">تیزر نمونه ۲</h3>
+                    <h3 class="lang en" style="display: none;">Teaser Sample 2</h3>
+                    <p class="lang fa">تیزر محصول با انیمیشن سه بعدی</p>
+                    <p class="lang en" style="display: none;">Product teaser with 3D animation</p>
+                </div>
+            </div>
+
+            <!-- Teaser 3 -->
+            <div class="card fade-in">
+                <div class="video-container">
+                    <div class="video-loading"></div>
+                    <video controls preload="metadata"
+                           onloadstart="this.previousElementSibling.style.display='block'"
+                           oncanplay="this.previousElementSibling.style.display='none'">
+                        <source src="tizer/3.mp4" type="video/mp4">
+                        مرورگر شما از این ویدئو پشتیبانی نمیکند
+                    </video>
+                </div>
+                <div class="card-info">
+                    <h3 class="lang fa">تیزر نمونه ۳</h3>
+                    <h3 class="lang en" style="display: none;">Teaser Sample 3</h3>
+                    <p class="lang fa">تیزر رویداد با موسیقی اورجینال</p>
+                    <p class="lang en" style="display: none;">Event teaser with original music</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram Page -->
+    <section id="instagram" class="page">
+        <div class="section-header">
+            <h2 class="lang fa">محتوای اینستاگرام</h2>
+            <h2 class="lang en" style="display: none;">Instagram Content</h2>
+            <p class="lang fa">آخرین تولیدات محتوایی برای اینستاگرام با جدیدترین تکنیک‌ها</p>
+            <p class="lang en" style="display: none;">Latest content productions for Instagram with newest techniques</p>
+        </div>
+
+        <div class="card-container">
+            <!-- Instagram 1 -->
+            <div class="card fade-in">
+                <div class="video-container">
+                    <div class="video-loading"></div>
+                    <video controls preload="metadata"
+                           onloadstart="this.previousElementSibling.style.display='block'"
+                           oncanplay="this.previousElementSibling.style.display='none'">
+                        <source src="instagram/1.mp4" type="video/mp4">
+                        مرورگر شما از این ویدئو پشتیبانی نمیکند
+                    </video>
+                </div>
+                <div class="card-info">
+                    <h3 class="lang fa">محتوای نمونه ۱</h3>
+                    <h3 class="lang en" style="display: none;">Content Sample 1</h3>
+                    <p class="lang fa">ریلز اینستاگرام با افکت‌های مدرن</p>
+                    <p class="lang en" style="display: none;">Instagram Reels with modern effects</p>
+                </div>
+            </div>
+
+            <!-- Instagram 2 -->
+            <div class="card fade-in">
+                <div class="video-container">
+                    <div class="video-loading"></div>
+                    <video controls preload="metadata"
+                           onloadstart="this.previousElementSibling.style.display='block'"
+                           oncanplay="this.previousElementSibling.style.display='none'">
+                        <source src="instagram/2.mp4" type="video/mp4">
+                        مرورگر شما از این ویدئو پشتیبانی نمیکند
+                    </video>
+                </div>
+                <div class="card-info">
+                    <h3 class="lang fa">محتوای نمونه ۲</h3>
+                    <h3 class="lang en" style="display: none;">Content Sample 2</h3>
+                    <p class="lang fa">استوری اینستاگرام با ترنزیشن حرفه‌ای</p>
+                    <p class="lang en" style="display: none;">Instagram Story with professional transitions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Page -->
+    <section id="contact" class="page">
+        <div class="section-header">
+            <h2 class="lang fa">تماس با ما</h2>
+            <h2 class="lang en" style="display: none;">Contact Us</h2>
+        </div>
+
+        <div class="contact-content">
+            <div class="contact-item">
+                <h3 class="lang fa">برای سفارش یا سوالات، با ما تماس بگیرید:</h3>
+                <h3 class="lang en" style="display: none;">For orders or questions, contact us:</h3>
+                
+                <div class="contact-info">
+                    <h3 class="lang fa">شماره تماس:</h3>
+                    <h3 class="lang en" style="display: none;">Phone Number:</h3>
+                    <p>09962363035</p>
+                </div>
+
+                <a href="tel:09962363035" class="btn call-btn">
+                    <i class="fas fa-phone"></i>
+                    <span class="lang fa">تماس بگیرید</span>
+                    <span class="lang en" style="display: none;">Call Now</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p class="lang fa">تمام حقوق محفوظ است - 2025 © ارسس گالری</p>
+            <p class="lang en" style="display: none;">All rights reserved - 2025 © Arses Gallery</p>
+
+            <p class="lang fa">طراح سایت: سام اسفندیاری</p>
+            <p class="lang en" style="display: none;">Designed by: Sam Esfandiari</p>
+
+            <p>09963307329</p>
+        </div>
+    </footer>
+
+    <script>
+        // Page Navigation System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            const savedLang = localStorage.getItem('preferredLang') || 'fa';
+            updateLanguage(savedLang);
+            updateLanguageButtons(savedLang);
+            
+            // Navigation Elements
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const hamburger = document.querySelector('.hamburger');
+            const navLinksContainer = document.querySelector('.nav-links');
+
+            // Page switching function
+            function switchPage(targetPage) {
+                // Update active states
+                navLinks.forEach(nl => nl.classList.remove('active'));
+                document.querySelector(`[data-page="${targetPage}"]`).classList.add('active');
+                
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+                
+                // Close mobile menu
+                navLinksContainer.classList.remove('active');
+                hamburger.classList.remove('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Navigation links event
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-page');
+                    switchPage(targetPage);
+                });
+            });
+
+            // Hamburger menu
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinksContainer.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!e.target.closest('nav') && navLinksContainer.classList.contains('active')) {
+                        navLinksContainer.classList.remove('active');
+                        hamburger.classList.remove('active');
+                    }
+                }
+            });
+
+            // Initialize first page
+            switchPage('home');
+        });
+
+        // Language System
+        function setLanguage(lang) {
+            localStorage.setItem('preferredLang', lang);
+            updateLanguage(lang);
+            updateLanguageButtons(lang);
+        }
+
+        function updateLanguage(lang) {
+            document.querySelectorAll('.lang').forEach(el => {
+                el.style.display = el.classList.contains(lang) ? '' : 'none';
+            });
+        }
+
+        function updateLanguageButtons(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang));
+            });
+        }
+
+        // Video loading optimization
+        function optimizeVideos() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('loadstart', function() {
+                    this.style.opacity = '0.7';
+                });
+                
+                video.addEventListener('canplay', function() {
+                    this.style.opacity = '1';
+                    this.previousElementSibling.style.display = 'none';
+                });
+                
+                video.addEventListener('error', function() {
+                    this.previousElementSibling.style.display = 'none';
+                    console.error('Error loading video:', this.src);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', optimizeVideos);
+
+        // Add fade-in animation to elements when they come into view
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    </script>
+</body>
+
+</html>

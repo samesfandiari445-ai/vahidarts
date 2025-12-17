@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پارسا ملک فهد - خدمات نقشه برداری</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2E86AB;
+            --secondary-color: #1B5299;
+            --accent-color: #F18F01;
+            --success-color: #27AE60;
+            --background-color: #0a0a0a;
+            --card-color: #1a1a1a;
+            --text-color: #ffffff;
+            --border-color: #333333;
+            --header-bg-dark: #2a2a2a;
+            --header-bg-light: #f5f0e6;
+        }
+
+        body.light-mode {
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #2d3436;
+            --border-color: #e0e0e0;
+            --header-bg-dark: #2a2a2a;
+            --header-bg-light: #f5f0e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        body.light-mode .top-bar {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-toggle, .lang-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .admin-btn {
+            background: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .admin-btn:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+
+        .creator-header {
+            background: var(--header-bg-dark);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .creator-header {
+            background: var(--header-bg-light);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .creator-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            background: transparent;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 20px;
+            border: 4px solid var(--header-bg-dark);
+        }
+
+        body.light-mode .creator-avatar {
+            border-color: var(--header-bg-light);
+        }
+
+        .creator-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            display: block;
+        }
+
+        .creator-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .creator-name {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .creator-tagline {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 300;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .posts-section {
+            background-color: var(--card-color);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            padding: 30px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .post {
+            padding: 35px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .post::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .post:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .post:hover::before {
+            opacity: 1;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+        }
+
+        .post-date {
+            color: #888;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 12px;
+            border-radius: 15px;
+        }
+
+        .post-content {
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        .post-video {
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 25px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: #888;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+            background: rgba(46, 134, 171, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.liked {
+            color: var(--success-color);
+            background: rgba(39, 174, 96, 0.15);
+            border-color: var(--success-color);
+        }
+
+        .action-btn.liked i {
+            font-weight: 900;
+            animation: heartBeat 0.6s ease;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(0.95); }
+            75% { transform: scale(1.1); }
+        }
+
+        .comments-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .comment:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .comment-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .comment-text {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            background: var(--card-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 134, 171, 0.1);
+        }
+
+        .comment-input button {
+            padding: 15px 25px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .about-card {
+            background-color: var(--card-color);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.3rem;
+        }
+
+        .about-text {
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .footer {
+            background-color: var(--card-color);
+            padding: 60px 20px 30px;
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #888;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            max-width: 1200px;
+            margin: 50px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        [data-lang="en"] {
+            display: none;
+        }
+
+        body.english [data-lang="fa"] {
+            display: none;
+        }
+
+        body.english [data-lang="en"] {
+            display: block;
+        }
+
+        body.english {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .no-posts i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 40px 15px;
+                gap: 30px;
+            }
+            
+            .creator-name {
+                font-size: 2.5rem;
+            }
+            
+            .creator-tagline {
+                font-size: 1.2rem;
+            }
+            
+            .creator-avatar {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .post-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .comment-input {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .nav-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- اعلان -->
+    <div class="notification" id="notification"></div>
+
+    <!-- نوار بالایی -->
+    <div class="top-bar">
+        <div class="nav-container">
+            <div class="logo" data-lang="fa">پارسا ملک فهد</div>
+            <div class="logo" data-lang="en">Parsa Malek Fahad</div>
+            <div class="nav-controls">
+                <a href="admin.html" class="admin-btn">
+                    <i class="fas fa-cog"></i>
+                    <span data-lang="fa">پنل مدیریت</span>
+                    <span data-lang="en">Admin Panel</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i> 
+                    <span class="theme-text" data-lang="fa">حالت شب</span>
+                    <span class="theme-text" data-lang="en">Night Mode</span>
+                </button>
+                <button class="lang-toggle" id="langToggle">
+                    <i class="fas fa-language"></i> 
+                    <span class="lang-text">EN</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- هدر اصلی -->
+    <section class="creator-header">
+        <div class="header-content">
+            <div class="creator-avatar">
+                <img src="profile/photo_1_2025-09-30_12-50-30.jpg" alt="پارسا ملک فهد" onerror="this.style.display='none'">
+            </div>
+            
+            <h1 class="creator-name" data-lang="fa">پارسا ملک فهد</h1>
+            <h1 class="creator-name" data-lang="en">Parsa Malek Fahad</h1>
+            
+            <p class="creator-tagline" data-lang="fa">متخصص نقشه‌برداری و مهندسی عمران</p>
+            <p class="creator-tagline" data-lang="en">Surveying and Civil Engineering Specialist</p>
+        </div>
+    </section>
+
+    <!-- محتوای اصلی -->
+    <div class="main-container">
+        <section class="posts-section">
+            <div class="section-header">
+                <h2 class="section-title" data-lang="fa"><i class="fas fa-newspaper"></i> نمونه کارها و پست‌ها</h2>
+                <h2 class="section-title" data-lang="en"><i class="fas fa-newspaper"></i> Portfolio & Posts</h2>
+            </div>
+            
+            <div id="postsContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div data-lang="fa">در حال بارگذاری پست‌ها...</div>
+                    <div data-lang="en">Loading posts...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- سایدبار -->
+        <div class="sidebar">
+            <div class="about-card">
+                <h2 class="card-title" data-lang="fa"><i class="fas fa-user"></i> درباره من</h2>
+                <h2 class="card-title" data-lang="en"><i class="fas fa-user"></i> About Me</h2>
+                <p class="about-text" data-lang="fa">
+                    پارسا ملک فهد - متخصص نقشه‌برداری با چهار سال سابقه کاری درخشان
+                </p>
+                <p class="about-text" data-lang="en">
+                    Parsa Malek Fahad - Surveying specialist with 4 years of brilliant work experience
+                </p>
+                <p class="about-text" data-lang="fa">
+                    ارائه کلیه خدمات نقشه برداری در کرمانشاه:<br>
+                    • تفکیک و قطعه‌بندی اراضی<br>
+                    • تهیه نقشه UTM<br>
+                    • نقشه‌برداری صنعتی<br>
+                    • مشاوره فنی مهندسی<br>
+                    • پایش تغییر شکل سازه‌ها
+                </p>
+                <p class="about-text" data-lang="en">
+                    Providing all surveying services in kermanshah:<br>
+                    • Land division and parceling<br>
+                    • UTM map preparation<br>
+                    • Industrial surveying<br>
+                    • Technical engineering consultation<br>
+                    • Structural deformation monitoring
+                </p>
+                <div class="social-links">
+                    <a href="https://twitter.com/parsamalekfahad" class="social-link" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com/parsamalekfahad" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://t.me/parsamalekfahad" class="social-link" target="_blank">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/parsamalekfahad" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3 data-lang="fa">خدمات</h3>
+                <h3 data-lang="en">Services</h3>
+                <ul class="footer-links">
+                    <li><a href="#services" data-lang="fa"><i class="fas fa-map-marked-alt"></i> نقشه‌برداری زمینی</a><a href="#services" data-lang="en"><i class="fas fa-map-marked-alt"></i> Land Surveying</a></li>
+                    <li><a href="#services" data-lang="fa"><i class="fas fa-draw-polygon"></i> تفکیک اراضی</a><a href="#services" data-lang="en"><i class="fas fa-draw-polygon"></i> Land Division</a></li>
+                    <li><a href="#services" data-lang="fa"><i class="fas fa-industry"></i> نقشه‌برداری صنعتی</a><a href="#services" data-lang="en"><i class="fas fa-industry"></i> Industrial Surveying</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 data-lang="fa">تماس با ما</h3>
+                <h3 data-lang="en">Contact Us</h3>
+                <ul class="footer-links">
+                    <li><a href="tel:+989185555496"><i class="fas fa-phone"></i>0918 555 5496</a></li>
+                    <li><a href="mailto:parsa@malekfahad.com"><i class="fas fa-envelope"></i> parsa@malekfahad.com</a></li>
+                    <li><a href="#contact" data-lang="fa"><i class="fas fa-map-marker-alt"></i> کرمانشاه, ایران</a><a href="#contact" data-lang="en"><i class="fas fa-map-marker-alt"></i> kermanshah, Iran</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 data-lang="fa">لینک‌های مفید</h3>
+                <h3 data-lang="en">Useful Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#terms" data-lang="fa"><i class="fas fa-file-contract"></i> شرایط استفاده</a><a href="#terms" data-lang="en"><i class="fas fa-file-contract"></i> Terms of Use</a></li>
+                    <li><a href="#privacy" data-lang="fa"><i class="fas fa-shield-alt"></i> حریم خصوصی</a><a href="#privacy" data-lang="en"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="#faq" data-lang="fa"><i class="fas fa-question-circle"></i> سوالات متداول</a><a href="#faq" data-lang="en"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 data-lang="fa">شبکه‌های اجتماعی</h3>
+                <h3 data-lang="en">Social Networks</h3>
+                <ul class="footer-links">
+                    <li><a href="https://twitter.com/parsamalekfahad" target="_blank" data-lang="fa"><i class="fab fa-twitter"></i> توییتر</a><a href="https://twitter.com/parsamalekfahad" target="_blank" data-lang="en"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://instagram.com/parsamalekfahad" target="_blank" data-lang="fa"><i class="fab fa-instagram"></i> اینستاگرام</a><a href="https://instagram.com/parsamalekfahad" target="_blank" data-lang="en"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://t.me/parsamalekfahad" target="_blank" data-lang="fa"><i class="fab fa-telegram"></i> تلگرام</a><a href="https://t.me/parsamalekfahad" target="_blank" data-lang="en"><i class="fab fa-telegram"></i> Telegram</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <span data-lang="fa">&copy; 2025 پارسا ملک فهد. تمام حقوق محفوظ است.</span>
+            <span data-lang="en">&copy; 2025 Parsa Malek Fahad. All rights reserved.</span>
+            <br>
+            <span data-lang="fa">طراح سایت: سام اسفندیاری</span>
+            <span data-lang="en">Website designer: Sam Esfandiari</span>
+            <br>
+            <span>0996 330 7329</span>
+        </div>
+    </footer>
+
+    <script>
+        // سیستم مدیریت داده‌ها
+        let posts = JSON.parse(localStorage.getItem('parsaPosts')) || [];
+        let currentLang = localStorage.getItem('language') || 'fa';
+        let likes = JSON.parse(localStorage.getItem('parsaLikes')) || {};
+        let comments = JSON.parse(localStorage.getItem('parsaComments')) || {};
+
+        // سیستم اعلان
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? 'var(--success-color)' : 'var(--primary-color)';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // بارگذاری پست‌ها
+        function loadPosts() {
+            const postsContainer = document.getElementById('postsContainer');
+            
+            if (posts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-newspaper"></i>
+                        <div data-lang="fa">هنوز هیچ پستی وجود ندارد</div>
+                        <div data-lang="en">No posts yet</div>
+                        <div data-lang="fa" style="margin-top: 15px; font-size: 0.9rem; opacity: 0.7;">از پنل مدیریت برای ایجاد پست جدید استفاده کنید</div>
+                        <div data-lang="en" style="margin-top: 15px; font-size: 0.9rem; opacity: 0.7;">Use the admin panel to create new posts</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let postsHTML = '';
+            
+            posts.forEach((post, index) => {
+                const postLikes = likes[post.id] || 0;
+                const postComments = comments[post.id] || [];
+                
+                postsHTML += `
+                    <div class="post fade-in" id="post-${post.id}">
+                        <div class="post-header">
+                            <h3 class="post-title">${post.title}</h3>
+                            <span class="post-date">${post.date}</span>
+                        </div>
+                        <div class="post-content">
+                            <p>${post.content.replace(/\n/g, '<br>')}</p>
+                            ${post.image ? `<img src="${post.image}" alt="${post.title}" class="post-image" onerror="this.style.display='none'">` : ''}
+                            ${post.video ? `<video controls class="post-video"><source src="${post.video}" type="video/mp4">مرورگر شما از ویدیو پشتیبانی نمی‌کند</video>` : ''}
+                            ${post.videoLink ? `
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0; margin-bottom: 25px;">
+                                    <iframe 
+                                        src="${post.videoLink.replace('watch?v=', 'embed/')}" 
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px;" 
+                                        frameborder="0" 
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn ${likes[post.id] ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                                <i class="far fa-heart"></i> 
+                                <span class="like-count">${postLikes}</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleCommentSection(${post.id})">
+                                <i class="far fa-comment"></i> 
+                                <span class="comment-count">${postComments.length}</span>
+                            </button>
+                            <button class="action-btn" onclick="sharePost(${post.id})">
+                                <i class="far fa-share-square"></i> 
+                                <span class="share-text" data-lang="fa">اشتراک</span>
+                                <span class="share-text" data-lang="en">Share</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                            <div class="comment-input">
+                                <input type="text" id="comment-input-${post.id}" placeholder="${currentLang === 'fa' ? 'نظر خود را بنویسید...' : 'Write your comment...'}">
+                                <button onclick="addComment(${post.id})">
+                                    <span data-lang="fa">ارسال</span>
+                                    <span data-lang="en">Send</span>
+                                </button>
+                            </div>
+                            <div id="comments-list-${post.id}">
+                                ${postComments.map(comment => `
+                                    <div class="comment">
+                                        <div class="comment-avatar">${comment.author.charAt(0)}</div>
+                                        <div class="comment-content">
+                                            <div class="comment-author">${comment.author}</div>
+                                            <div class="comment-text">${comment.text}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            postsContainer.innerHTML = postsHTML;
+        }
+
+        // سیستم لایک
+        function toggleLike(postId) {
+            if (!likes[postId]) {
+                likes[postId] = 0;
+            }
+            
+            const button = document.querySelector(`#post-${postId} .action-btn`);
+            const likeCount = document.querySelector(`#post-${postId} .like-count`);
+            const isLiked = button.classList.contains('liked');
+
+            if (isLiked) {
+                button.classList.remove('liked');
+                likes[postId] = Math.max(0, likes[postId] - 1);
+                likeCount.textContent = likes[postId];
+                
+                const message = currentLang === 'fa' ? 'لایک حذف شد' : 'Like removed';
+                showNotification(message, 'success');
+            } else {
+                button.classList.add('liked');
+                likes[postId] = likes[postId] + 1;
+                likeCount.textContent = likes[postId];
+                
+                const message = currentLang === 'fa' ? 'لایک شد!' : 'Liked!';
+                showNotification(message, 'success');
+            }
+            
+            localStorage.setItem('parsaLikes', JSON.stringify(likes));
+        }
+
+        // سیستم کامنت
+        function toggleCommentSection(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addComment(postId) {
+            const commentInput = document.getElementById(`comment-input-${postId}`);
+            const commentText = commentInput.value.trim();
+            
+            if (commentText) {
+                if (!comments[postId]) {
+                    comments[postId] = [];
+                }
+                
+                const newComment = {
+                    id: Date.now(),
+                    author: currentLang === 'fa' ? 'کاربر' : 'User',
+                    text: commentText,
+                    date: new Date().toLocaleDateString('fa-IR')
+                };
+                
+                comments[postId].push(newComment);
+                
+                const commentCount = document.querySelector(`#post-${postId} .comment-count`);
+                commentCount.textContent = comments[postId].length;
+                
+                const commentsList = document.getElementById(`comments-list-${postId}`);
+                commentsList.innerHTML += `
+                    <div class="comment">
+                        <div class="comment-avatar">${newComment.author.charAt(0)}</div>
+                        <div class="comment-content">
+                            <div class="comment-author">${newComment.author}</div>
+                            <div class="comment-text">${newComment.text}</div>
+                        </div>
+                    </div>
+                `;
+                
+                commentInput.value = '';
+                localStorage.setItem('parsaComments', JSON.stringify(comments));
+                
+                const message = currentLang === 'fa' ? 'نظر شما ثبت شد!' : 'Your comment has been added!';
+                showNotification(message, 'success');
+            }
+        }
+
+        // سیستم اشتراک‌گذاری
+        function sharePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = currentLang === 'fa' ? 
+                `پست جالب: ${post.title}` : 
+                `Interesting post: ${post.title}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: post.title,
+                    text: shareText,
+                    url: window.location.href + '#post-' + postId
+                })
+                .then(() => {
+                    const message = currentLang === 'fa' ? 'پست به اشتراک گذاشته شد!' : 'Post shared successfully!';
+                    showNotification(message, 'success');
+                })
+                .catch((error) => console.log('Error sharing:', error));
+            } else {
+                navigator.clipboard.writeText(window.location.href + '#post-' + postId)
+                    .then(() => {
+                        const message = currentLang === 'fa' ? 
+                            'لینک پست در کلیپ‌بورد کپی شد!' : 
+                            'Post link copied to clipboard!';
+                        showNotification(message, 'success');
+                    })
+                    .catch(() => {
+                        const tempInput = document.createElement('input');
+                        tempInput.value = window.location.href + '#post-' + postId;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        const message = currentLang === 'fa' ? 
+                            'لینک پست در کلیپ‌بورد کپی شد!' : 
+                            'Post link copied to clipboard!';
+                        showNotification(message, 'success');
+                    });
+            }
+        }
+
+        // سیستم تغییر زبان
+        function toggleLanguage() {
+            const body = document.body;
+            const langToggle = document.getElementById('langToggle');
+            const langText = langToggle.querySelector('.lang-text');
+            
+            if (currentLang === 'fa') {
+                body.classList.add('english');
+                currentLang = 'en';
+                langText.textContent = 'FA';
+                localStorage.setItem('language', 'en');
+                showNotification('Language changed to English', 'success');
+            } else {
+                body.classList.remove('english');
+                currentLang = 'fa';
+                langText.textContent = 'EN';
+                localStorage.setItem('language', 'fa');
+                showNotification('زبان به فارسی تغییر کرد', 'success');
+            }
+            
+            updateCommentPlaceholders();
+            loadPosts();
+        }
+
+        function updateCommentPlaceholders() {
+            const commentInputs = document.querySelectorAll('.comment-input input');
+            commentInputs.forEach(input => {
+                input.placeholder = currentLang === 'fa' ? 'نظر خود را بنویسید...' : 'Write your comment...';
+            });
+        }
+
+        // سیستم تم
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('light-mode');
+            updateThemeText();
+            localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+            
+            const message = body.classList.contains('light-mode') ? 
+                (currentLang === 'fa' ? 'حالت روز فعال شد' : 'Day mode activated') :
+                (currentLang === 'fa' ? 'حالت شب فعال شد' : 'Night mode activated');
+            showNotification(message, 'success');
+        });
+
+        function updateThemeText() {
+            const themeText = themeToggle.querySelectorAll('.theme-text');
+            if (body.classList.contains('light-mode')) {
+                themeText.forEach(span => {
+                    if (span.getAttribute('data-lang') === currentLang) {
+                        span.textContent = currentLang === 'fa' ? 'حالت روز' : 'Day Mode';
+                    }
+                });
+                themeToggle.querySelector('i').className = 'fas fa-sun';
+            } else {
+                themeText.forEach(span => {
+                    if (span.getAttribute('data-lang') === currentLang) {
+                        span.textContent = currentLang === 'fa' ? 'حالت شب' : 'Night Mode';
+                    }
+                });
+                themeToggle.querySelector('i').className = 'fas fa-moon';
+            }
+        }
+
+        // بارگذاری تنظیمات
+        function loadSettings() {
+            // بارگذاری تم
+            if (localStorage.getItem('theme') === 'light') {
+                body.classList.add('light-mode');
+            }
+
+            // بارگذاری زبان
+            if (currentLang === 'en') {
+                document.body.classList.add('english');
+                document.getElementById('langToggle').querySelector('.lang-text').textContent = 'FA';
+            }
+
+            updateThemeText();
+        }
+
+        // رویدادها
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+
+        // مقداردهی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            loadPosts();
+            
+            // بارگذاری مجدد پست‌ها هنگام تغییر در پنل مدیریت
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'parsaPosts') {
+                    posts = JSON.parse(e.newValue) || [];
+                    loadPosts();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

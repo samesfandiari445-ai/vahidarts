@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~/personal_archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-dark: #0a0a0a;
+            --terminal-gray: #1a1a1a;
+            --text-dim: #666666;
+        }
+
+        body {
+            background: var(--terminal-dark);
+            color: var(--terminal-green);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 99%, rgba(0, 255, 65, 0.02) 100%),
+                linear-gradient(transparent 99%, rgba(0, 255, 65, 0.02) 100%);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .terminal-header {
+            background: var(--terminal-gray);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--terminal-green);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .prompt {
+            color: var(--terminal-green);
+            margin-bottom: 1rem;
+        }
+
+        .command {
+            color: var(--text-dim);
+        }
+
+        .file-system {
+            margin: 2rem 0;
+            border: 1px solid var(--text-dim);
+            padding: 1rem;
+            background: rgba(0, 255, 65, 0.02);
+        }
+
+        .folder {
+            color: var(--terminal-green);
+            margin: 1rem 0;
+            padding: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .folder:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--terminal-green);
+        }
+
+        .file-item {
+            color: var(--text-dim);
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background: rgba(0, 255, 65, 0.05);
+            color: var(--terminal-green);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .file-action {
+            background: none;
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+            padding: 0.2rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .file-action:hover {
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .file-preview {
+            border: 1px solid var(--text-dim);
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            max-height: 500px;
+            overflow: auto;
+            display: none;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border: 1px solid var(--text-dim);
+        }
+
+        .file-info {
+            color: var(--text-dim);
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .back-btn {
+            color: var(--terminal-green);
+            cursor: pointer;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            border: 1px solid var(--text-dim);
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            border-color: var(--terminal-green);
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--terminal-gray);
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--text-dim);
+        }
+
+        .file-icon {
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="terminal-header">
+        user@personal_archive: ~/ - TERMINAL
+    </div>
+
+    <div class="main-container">
+        <!-- ترمینال ورودی -->
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> whoami
+        </div>
+        <div class="output">
+            > private_archive | personal_space | file_vault
+        </div>
+
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> ls -la
+        </div>
+
+        <!-- سیستم فایل ساده -->
+        <div class="file-system">
+            <!-- پوشه اول -->
+            <div class="folder" onclick="navigateTo('codes')">
+                <i class="fas fa-folder"></i>
+                /codes
+                <span style="color: var(--text-dim); font-size: 0.8rem; margin-right: 1rem;">
+                    - فایل‌های کد و برنامه
+                </span>
+            </div>
+
+            <!-- پوشه دوم -->
+            <div class="folder" onclick="navigateTo('images')">
+                <i class="fas fa-folder"></i>
+                /images  
+                <span style="color: var(--text-dim); font-size: 0.8rem; margin-right: 1rem;">
+                    - عکس‌ها و تصاویر
+                </span>
+            </div>
+
+            <!-- پوشه سوم -->
+            <div class="folder" onclick="navigateTo('documents')">
+                <i class="fas fa-folder"></i>
+                /documents
+                <span style="color: var(--text-dim); font-size: 0.8rem; margin-right: 1rem;">
+                    - مستندات و فایل‌ها
+                </span>
+            </div>
+        </div>
+
+        <!-- وضعیت سیستم -->
+        <div class="prompt">
+            <span class="command">user@archive:~$</span> system_status
+        </div>
+        <div class="output">
+            > Mode: PRIVATE - NO VISITORS<br>
+            > Storage: 2.1GB / 5GB<br>
+            > Active: 1 user (you)
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span>STATUS: OFFLINE | MODE: PRIVATE | USER: SOLITARY</span>
+    </div>
+
+    <script>
+        // دیتابیس فایل‌های واقعی - اینجا فایل‌هایت رو اضافه کن
+        const fileDatabase = {
+            'codes': [
+                {
+                    name: 'arses site',
+                    path: 'files/codes/index.rar',
+                    type: 'zip',
+                    size: '2.1 MB',
+                    description: 'کدهای بکند پروژه'
+                },
+                
+            ],
+            'images': [
+                {
+                    name: 'screenshot-2024.png',
+                    path: 'files/images/screenshot-2024.png',
+                    type: 'png',
+                    size: '850 KB',
+                    description: 'اسکرین‌شوت از پروژه'
+                },
+                
+            ],
+            'documents': [
+                {
+                    name: 'project-docs.pdf',
+                    path: 'files/documents/project-docs.pdf',
+                    type: 'pdf',
+                    size: '3.4 MB',
+                    description: 'مستندات کامل پروژه'
+                },
+                
+            ]
+        };
+
+        // آیکون‌های مختلف برای انواع فایل
+        function getFileIcon(fileType) {
+            const icons = {
+                'zip': 'fa-file-archive',
+                'js': 'fa-file-code',
+                'png': 'fa-file-image',
+                'jpg': 'fa-file-image',
+                'jpeg': 'fa-file-image',
+                'pdf': 'fa-file-pdf',
+                'txt': 'fa-file-text',
+                'doc': 'fa-file-word',
+                'docx': 'fa-file-word'
+            };
+            return icons[fileType] || 'fa-file';
+        }
+
+        function navigateTo(folderName) {
+            const files = fileDatabase[folderName] || [];
+            
+            const pageContent = `
+                <div class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-right"></i> بازگشت به صفحه اصلی
+                </div>
+                
+                <div class="prompt">
+                    <span class="command">user@archive:~/${folderName}$</span> ls -la
+                </div>
+                
+                <div class="file-system">
+                    ${files.map(file => `
+                        <div class="file-item">
+                            <span>
+                                <i class="fas ${getFileIcon(file.type)} file-icon"></i>
+                                ${file.name}
+                                <span style="color: var(--text-dim); font-size: 0.7rem; margin-right: 0.5rem;">
+                                    (${file.size})
+                                </span>
+                            </span>
+                            <div class="file-actions">
+                                <button class="file-action" onclick="showFilePreview('${file.path}', '${file.type}', '${file.name}')">
+                                    نمایش
+                                </button>
+                                <button class="file-action" onclick="downloadFile('${file.path}', '${file.name}')">
+                                    دانلود
+                                </button>
+                            </div>
+                        </div>
+                        <div style="color: var(--text-dim); font-size: 0.7rem; padding-right: 2rem;">
+                            ${file.description}
+                        </div>
+                    `).join('')}
+                    
+                    ${files.length === 0 ? `
+                        <div style="color: var(--text-dim); text-align: center; padding: 2rem;">
+                            پوشه خالی است<br>
+                            فایل‌هایت رو در متغیر fileDatabase اضافه کن
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div id="file-preview" class="file-preview">
+                    <div id="preview-content"></div>
+                    <div class="file-info" id="file-info"></div>
+                </div>
+            `;
+
+            // ایجاد صفحه جدید
+            const newPage = `
+                <!DOCTYPE html>
+                <html lang="fa" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>~/personal_archive/${folderName}</title>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <style>
+                        ${document.querySelector('style').innerHTML}
+                    </style>
+                </head>
+                <body>
+                    <div class="matrix-bg"></div>
+                    
+                    <div class="terminal-header">
+                        user@personal_archive: ~/${folderName} - TERMINAL
+                    </div>
+
+                    <div class="main-container">
+                        ${pageContent}
+                    </div>
+
+                    <div class="status-bar">
+                        <span>STATUS: OFFLINE | LOCATION: ~/${folderName} | USER: SOLITARY</span>
+                    </div>
+
+                    <script>
+                        function showFilePreview(filePath, fileType, fileName) {
+                            const preview = document.getElementById('file-preview');
+                            const content = document.getElementById('preview-content');
+                            const info = document.getElementById('file-info');
+                            
+                            preview.style.display = 'block';
+                            info.textContent = \`\${fileName} | Type: \${fileType}\`;
+                            
+                            if (['png', 'jpg', 'jpeg', 'gif'].includes(fileType)) {
+                                content.innerHTML = \`<img src="\${filePath}" class="preview-image" alt="\${fileName}">\`;
+                            } else if (fileType === 'pdf') {
+                                content.innerHTML = \`
+                                    <i class="fas fa-file-pdf" style="font-size: 4rem; color: var(--text-dim); margin: 2rem;"></i>
+                                    <div>فایل PDF - برای مشاهده دانلود کنید</div>
+                                \`;
+                            } else if (fileType === 'zip') {
+                                content.innerHTML = \`
+                                    <i class="fas fa-file-archive" style="font-size: 4rem; color: var(--text-dim); margin: 2rem;"></i>
+                                    <div>فایل فشرده - برای مشاهده دانلود کنید</div>
+                                \`;
+                            } else {
+                                content.innerHTML = \`
+                                    <i class="fas fa-file" style="font-size: 4rem; color: var(--text-dim); margin: 2rem;"></i>
+                                    <div>فایل \${fileType} - برای مشاهده دانلود کنید</div>
+                                \`;
+                            }
+                        }
+                        
+                        function downloadFile(filePath, fileName) {
+                            // ایجاد لینک دانلود مستقیم
+                            const a = document.createElement('a');
+                            a.href = filePath;
+                            a.download = fileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `;
+
+            const newWindow = window.open();
+            newWindow.document.write(newPage);
+            newWindow.document.close();
+        }
+    </script>
+</body>
+</html>
